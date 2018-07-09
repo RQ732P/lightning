@@ -130,6 +130,7 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 			       self_pay_msat / 1000,
 			       other_pay_msat / 1000,
 			       self_reserve_msat / 1000);
+
 		return NULL;
 	}
 
@@ -164,6 +165,7 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 		tx->output[n].amount = self_pay_msat / 1000;
 		tx->output[n].script = scriptpubkey_p2wsh(tx, wscript);
 		n++;
+		printf("initial_commit_tx: add to local");
 	}
 
 	/* BOLT #3:
@@ -183,6 +185,7 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 		tx->output[n].amount = other_pay_msat / 1000;
 		tx->output[n].script = scriptpubkey_p2wpkh(tx,
 						   &keyset->other_payment_key);
+		printf("initial_commit_tx: add to remote");
 		n++;
 	}
 
