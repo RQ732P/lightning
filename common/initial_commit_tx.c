@@ -162,12 +162,16 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 	 *    `dust_limit_satoshis`, add a [`to_local`
 	 *    output](#to-local-output).
 	 */
+
+	printf("self pay %i\n", (self_pay_msat / 1000));
+	printf("dust %i\n", dust_limit_satoshis);
+
 	if (self_pay_msat / 1000 >= dust_limit_satoshis) {
 		u8 *wscript = to_self_wscript(tmpctx, to_self_delay,keyset);
 		tx->output[n].amount = self_pay_msat / 1000;
 		tx->output[n].script = scriptpubkey_p2wsh(tx, wscript);
 		n++;
-		printf("initial_commit_tx: add to local");
+		printf("initial_commit_tx: add to local\n");
 	}
 
 	/* BOLT #3:
@@ -187,7 +191,7 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 		tx->output[n].amount = other_pay_msat / 1000;
 		tx->output[n].script = scriptpubkey_p2wpkh(tx,
 						   &keyset->other_payment_key);
-		printf("initial_commit_tx: add to remote");
+		printf("initial_commit_tx: add to remote\n");
 		n++;
 	}
 

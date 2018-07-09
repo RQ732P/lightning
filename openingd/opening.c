@@ -746,7 +746,7 @@ static u8 *fundee_channel(struct state *state,
 			  &theirsig)) 
 	{
 		const unsigned char *sw = wscript;
-		printf("fundee_channel wscript");
+		printf("fundee_channel wscript\n");
 		while(*sw)
 			printf("%02x", (unsigned int) *sw++);
 		printf("\n");
