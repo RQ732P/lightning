@@ -183,7 +183,7 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	 *
 	 * Double SHA256 of the serialization of:
 	 *     1. nVersion of the transaction (4-byte little endian)
-	 */
+	 */ 
 	push_le32(tx->version, push_sha, ctx);
 
 	/*     2. hashPrevouts (32-byte hash) */
