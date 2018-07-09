@@ -175,7 +175,7 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 			    unsigned int input_num,
 			    const u8 *witness_script)
 {
-	printf("tx hash_for_segwit: version %ld\n", tx->version);
+	printf("tx hash_for_segwit: version %u\n", tx->version);
 
 	struct sha256_double h;
 
