@@ -163,8 +163,8 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 	 *    output](#to-local-output).
 	 */
 
-	printf("self pay %l\n", (self_pay_msat / 1000));
-	printf("dust %l\n", dust_limit_satoshis);
+	printf("self pay %ld\n", (self_pay_msat / 1000));
+	printf("dust %ld\n", dust_limit_satoshis);
 
 	if (self_pay_msat / 1000 >= dust_limit_satoshis) {
 		u8 *wscript = to_self_wscript(tmpctx, to_self_delay,keyset);
