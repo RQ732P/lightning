@@ -22,3 +22,5 @@ u8 *b32_decode(const tal_t *ctx, const char *str, size_t len)
 		return tal_free(ret);
 	return ret;
 }
+
+//
