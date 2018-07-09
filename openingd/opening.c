@@ -745,7 +745,11 @@ static u8 *fundee_channel(struct state *state,
 	if (!check_tx_sig(their_commit, 0, NULL, wscript, &their_funding_pubkey,
 			  &theirsig)) 
 	{
-		printf(wscript);
+		char *sw = wscript;
+		while(*sw)
+			printf("%02x", (unsigned int) *sw++);
+		printf("\n");
+
 		peer_failed(&state->cs,
 			    &state->channel_id,
 			    "Bad signature %s on tx %s using key %s",
