@@ -8,4 +8,4 @@
 struct bitcoin_address {
 	struct ripemd160 addr;
 };
-#endif /* LIGHTNING_BITCOIN_ADDRESS_H */
+#endif /* LIGHTNING_BITCOIN_ADDRESS_H */ 
