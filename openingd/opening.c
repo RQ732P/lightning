@@ -743,7 +743,9 @@ static u8 *fundee_channel(struct state *state,
 				   "Could not meet our fees and reserve");
 
 	if (!check_tx_sig(their_commit, 0, NULL, wscript, &their_funding_pubkey,
-			  &theirsig)) {
+			  &theirsig)) 
+	{
+		printf(wscript);
 		peer_failed(&state->cs,
 			    &state->channel_id,
 			    "Bad signature %s on tx %s using key %s",
