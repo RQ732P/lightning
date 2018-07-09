@@ -1,7 +1,7 @@
 #include <ccan/str/base32/base32.h>
 #include <common/base32.h>
 
-/* We want lower-case conversion please */
+/* We want lower-case conversion please xxxxxxxxxxxxxxxxxxxxxxxxxxxx */
 static const char base32_lower[] = "abcdefghijklmnopqrstuvwxyz234567=";
 
 char *b32_encode(const tal_t *ctx, const void *data, size_t len)
