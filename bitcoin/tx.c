@@ -201,7 +201,7 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 
 
 	const unsigned char *sw = witness_script;
-		printf("tx hash_for_segwit witness_script")
+		printf("tx hash_for_segwit witness_script");
 		while(*sw)
 			printf("%02x", (unsigned int) *sw++);
 		printf("\n");
