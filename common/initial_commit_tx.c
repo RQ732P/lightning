@@ -7,6 +7,8 @@
 #include <common/status.h>
 #include <common/utils.h>
 #include <inttypes.h>
+#include <stdio.h>
+
 
 /* BOLT #3:
  *
