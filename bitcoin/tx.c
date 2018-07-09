@@ -175,6 +175,8 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 			    unsigned int input_num,
 			    const u8 *witness_script)
 {
+	printf("tx hash_for_segwit\n");
+
 	struct sha256_double h;
 
 	/* BIP143:
@@ -196,6 +198,13 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	push_sha(&tx->input[input_num].txid, sizeof(tx->input[input_num].txid),
 		ctx);
 	push_le32(tx->input[input_num].index, push_sha, ctx);
+
+
+	const unsigned char *sw = witness_script;
+		printf("tx hash_for_segwit witness_script")
+		while(*sw)
+			printf("%02x", (unsigned int) *sw++);
+		printf("\n");
 
 	/*     5. scriptCode of the input (varInt for the length + script) */
 	push_varint_blob(witness_script, push_sha, ctx);
