@@ -191,7 +191,18 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 		tx->output[n].amount = other_pay_msat / 1000;
 		tx->output[n].script = scriptpubkey_p2wpkh(tx,
 						   &keyset->other_payment_key);
+
+
 		printf("initial_commit_tx: add to remote\n");
+		unsigned char *sw = keyset->other_payment_key.data;
+		printf("other payment key\n");
+		while(*sw)
+			printf("%02x", (unsigned int) *sw++);
+		printf("\n");
+
+
+
+		
 		n++;
 	}
 
