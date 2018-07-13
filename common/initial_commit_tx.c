@@ -197,12 +197,12 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 		
 
 		unsigned char der_keys[PUBKEY_DER_LEN];
-		pubkey_to_der(der_keys, sw);
-		unsigned char *sw = der_keys;
+		pubkey_to_der(der_keys, &keyset->other_payment_key);
+		
 
 		printf("other payment key is\n");
 		for (int i = 0; i < 64; ++i)
-			printf("%02x", (unsigned int) *sw++);
+			printf("%02x", (unsigned int) der_keys[i]);
 		printf("\n");
 
 
