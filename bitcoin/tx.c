@@ -186,6 +186,12 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	 */ 
 	push_le32(tx->version, push_sha, ctx);
 
+	printf("tx hash for sig check (siganture.c)\n");
+	unsigned char * sw = (unsigned char *) &ctx;
+	for (int i = 0; i < 100; ++i)
+		printf("%02x", (unsigned int) *sw++);
+	printf("\n");
+
 	/*     2. hashPrevouts (32-byte hash) */
 	hash_prevouts(&h, tx);
 	push_sha(&h, sizeof(h), ctx);
