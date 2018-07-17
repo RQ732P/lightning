@@ -244,6 +244,12 @@ void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
 		push_tx(tx, push_sha, &ctx, false);
 	}
 
+	printf("tx digest (tx.c)\n");
+	unisgned char * sw = (unisgned char *) &ctx;
+	while(*sw)
+		printf("%02x", (unsigned int) *sw++);
+	printf("\n");
+
 	sha256_le32(&ctx, SIGHASH_ALL);
 	sha256_double_done(&ctx, h);
 }
