@@ -173,7 +173,7 @@ static void hash_outputs(struct sha256_double *h, const struct bitcoin_tx *tx)
 static void hash_for_segwit(struct sha256_ctx *ctx,
 			    const struct bitcoin_tx *tx,
 			    unsigned int input_num,
-			    const u8 *witness_script)
+			    u8 *witness_script)
 {
 	printf("tx hash_for_segwit: version %u\n", tx->version);
 

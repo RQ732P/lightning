@@ -153,7 +153,7 @@ bool check_tx_sig(struct bitcoin_tx *tx, size_t input_num,
 
 	printf("tx hash for sig check (siganture.c)\n");
 	unsigned char * sw = (unsigned char *) &hash;
-	while(*sw)
+	for (int i = 0; i < 100; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
 
