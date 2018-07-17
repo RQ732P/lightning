@@ -186,8 +186,9 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	 */ 
 	push_le32(tx->version, push_sha, ctx);
 
-	printf("tx hash for sig check (siganture.c)\n");
-	unsigned char * sw = (unsigned char *) &ctx;
+	unsigned char * sw;
+	printf("hash for segwit - tx.c\n");
+	sw = (unsigned char *) &ctx;
 	for (int i = 0; i < 100; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
@@ -195,6 +196,13 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	/*     2. hashPrevouts (32-byte hash) */
 	hash_prevouts(&h, tx);
 	push_sha(&h, sizeof(h), ctx);
+
+	printf("hash for segwit - tx.c\n");
+	sw = (unsigned char *) &ctx;
+	for (int i = 0; i < 100; ++i)
+		printf("%02x", (unsigned int) *sw++);
+	printf("\n");
+
 
 	/*     3. hashSequence (32-byte hash) */
 	hash_sequence(&h, tx);
@@ -205,13 +213,12 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 		ctx);
 	push_le32(tx->input[input_num].index, push_sha, ctx);
 
-	/*
-	unsigned char * zz = witness_script;
-	printf("tx hash_for_segwit witness_script\n");
+	printf("hash for segwit - tx.c\n");
+	sw = (unsigned char *) &ctx;
 	for (int i = 0; i < 100; ++i)
-		printf("%02x", (unsigned int) *zz++);
+		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
-	*/
+
 	/*     5. scriptCode of the input (varInt for the length + script) */
 	push_varint_blob(witness_script, push_sha, ctx);
 
@@ -227,6 +234,12 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 
 	/*     9. nLocktime of the transaction (4-byte little endian) */
 	push_le32(tx->lock_time, push_sha, ctx);
+
+	printf("hash for segwit - tx.c\n");
+	sw = (unsigned char *) &ctx;
+	for (int i = 0; i < 100; ++i)
+		printf("%02x", (unsigned int) *sw++);
+	printf("\n");
 }
 
 void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
