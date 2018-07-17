@@ -13,8 +13,8 @@
 
 #define SEGREGATED_WITNESS_FLAG 0x1
 
-static void push_tx_input(const struct bitcoin_tx_input *input,
-			 void (*push)(const void *, size_t, void *), void *pushp)
+static void push_tx_input( struct bitcoin_tx_input *input,
+			 void (*push)( void *, size_t, void *), void *pushp)
 {
 	push(&input->txid, sizeof(input->txid), pushp);
 	push_le32(input->index, push, pushp);
@@ -22,8 +22,8 @@ static void push_tx_input(const struct bitcoin_tx_input *input,
 	push_le32(input->sequence_number, push, pushp);
 }
 
-static void push_tx_output(const struct bitcoin_tx_output *output,
-			  void (*push)(const void *, size_t, void *), void *pushp)
+static void push_tx_output( struct bitcoin_tx_output *output,
+			  void (*push)( void *, size_t, void *), void *pushp)
 {
 	push_le64(output->amount, push, pushp);
 	push_varint_blob(output->script, push, pushp);
@@ -32,15 +32,15 @@ static void push_tx_output(const struct bitcoin_tx_output *output,
 /* BIP 141:
  * It is followed by stack items, with each item starts with a var_int
  * to indicate the length. */
-static void push_witness(const u8 *witness,
-			void (*push)(const void *, size_t, void *), void *pushp)
+static void push_witness( u8 *witness,
+			void (*push)( void *, size_t, void *), void *pushp)
 {
 	push_varint_blob(witness, push, pushp);
 }
 
 /* BIP144:
  * If the witness is empty, the old serialization format should be used. */
-static bool uses_witness(const struct bitcoin_tx *tx)
+static bool uses_witness( struct bitcoin_tx *tx)
 {
 	size_t i;
 
@@ -55,8 +55,8 @@ static bool uses_witness(const struct bitcoin_tx *tx)
  * transaction. Each txin is associated with a witness field. A
  * witness field starts with a var_int to indicate the number of stack
  * items for the txin.  */
-static void push_witnesses(const struct bitcoin_tx *tx,
-			  void (*push)(const void *, size_t, void *), void *pushp)
+static void push_witnesses( struct bitcoin_tx *tx,
+			  void (*push)( void *, size_t, void *), void *pushp)
 {
 	size_t i;
 	for (i = 0; i < tal_count(tx->input); i++) {
@@ -78,8 +78,8 @@ static void push_witnesses(const struct bitcoin_tx *tx,
 	}
 }
 
-static void push_tx(const struct bitcoin_tx *tx,
-		   void (*push)(const void *, size_t, void *), void *pushp,
+static void push_tx( struct bitcoin_tx *tx,
+		   void (*push)( void *, size_t, void *), void *pushp,
 		   bool bip144)
 {
 	varint_t i;
@@ -115,13 +115,13 @@ static void push_tx(const struct bitcoin_tx *tx,
 	push_le32(tx->lock_time, push, pushp);
 }
 
-static void push_sha(const void *data, size_t len, void *shactx_)
+static void push_sha( void *data, size_t len, void *shactx_)
 {
 	struct sha256_ctx *ctx = shactx_;
 	sha256_update(ctx, memcheck(data, len), len);
 }
 
-static void hash_prevouts(struct sha256_double *h, const struct bitcoin_tx *tx)
+static void hash_prevouts(struct sha256_double *h,  struct bitcoin_tx *tx)
 {
 	struct sha256_ctx ctx;
 	size_t i;
@@ -137,7 +137,7 @@ static void hash_prevouts(struct sha256_double *h, const struct bitcoin_tx *tx)
 	sha256_double_done(&ctx, h);
 }
 
-static void hash_sequence(struct sha256_double *h, const struct bitcoin_tx *tx)
+static void hash_sequence(struct sha256_double *h,  struct bitcoin_tx *tx)
 {
 	struct sha256_ctx ctx;
 	size_t i;
@@ -156,7 +156,7 @@ static void hash_sequence(struct sha256_double *h, const struct bitcoin_tx *tx)
  * double SHA256 of the serialization of all output value (8-byte
  * little endian) with scriptPubKey (varInt for the length +
  * script); */
-static void hash_outputs(struct sha256_double *h, const struct bitcoin_tx *tx)
+static void hash_outputs(struct sha256_double *h,  struct bitcoin_tx *tx)
 {
 	struct sha256_ctx ctx;
 	size_t i;
@@ -171,7 +171,7 @@ static void hash_outputs(struct sha256_double *h, const struct bitcoin_tx *tx)
 }
 
 static void hash_for_segwit(struct sha256_ctx *ctx,
-			    const struct bitcoin_tx *tx,
+			     struct bitcoin_tx *tx,
 			    unsigned int input_num,
 			    u8 *witness_script)
 {
@@ -229,9 +229,9 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	push_le32(tx->lock_time, push_sha, ctx);
 }
 
-void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
+void sha256_tx_for_sig(struct sha256_double *h,  struct bitcoin_tx *tx,
 		       unsigned int input_num,
-		       const u8 *witness_script)
+		        u8 *witness_script)
 {
 	size_t i;
 	struct sha256_ctx ctx = SHA256_INIT;
@@ -262,7 +262,7 @@ void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
 	sha256_double_done(&ctx, h);
 }
 
-static void push_linearize(const void *data, size_t len, void *pptr_)
+static void push_linearize( void *data, size_t len, void *pptr_)
 {
 	u8 **pptr = pptr_;
 	size_t oldsize = tal_count(*pptr);
@@ -271,19 +271,19 @@ static void push_linearize(const void *data, size_t len, void *pptr_)
 	memcpy(*pptr + oldsize, memcheck(data, len), len);
 }
 
-u8 *linearize_tx(const tal_t *ctx, const struct bitcoin_tx *tx)
+u8 *linearize_tx( tal_t *ctx,  struct bitcoin_tx *tx)
 {
 	u8 *arr = tal_arr(ctx, u8, 0);
 	push_tx(tx, push_linearize, &arr, true);
 	return arr;
 }
 
-static void push_measure(const void *data UNUSED, size_t len, void *lenp)
+static void push_measure( void *data UNUSED, size_t len, void *lenp)
 {
 	*(size_t *)lenp += len;
 }
 
-size_t measure_tx_weight(const struct bitcoin_tx *tx)
+size_t measure_tx_weight( struct bitcoin_tx *tx)
 {
 	size_t non_witness_len = 0, witness_len = 0;
 	push_tx(tx, push_measure, &non_witness_len, false);
@@ -297,7 +297,7 @@ size_t measure_tx_weight(const struct bitcoin_tx *tx)
 	return non_witness_len * 4 + witness_len;
 }
 
-void bitcoin_txid(const struct bitcoin_tx *tx, struct bitcoin_txid *txid)
+void bitcoin_txid( struct bitcoin_tx *tx, struct bitcoin_txid *txid)
 {
 	struct sha256_ctx ctx = SHA256_INIT;
 
@@ -306,7 +306,7 @@ void bitcoin_txid(const struct bitcoin_tx *tx, struct bitcoin_txid *txid)
 	sha256_double_done(&ctx, &txid->shad);
 }
 
-struct bitcoin_tx *bitcoin_tx(const tal_t *ctx, varint_t input_count,
+struct bitcoin_tx *bitcoin_tx( tal_t *ctx, varint_t input_count,
 			      varint_t output_count)
 {
 	struct bitcoin_tx *tx = tal(ctx, struct bitcoin_tx);
@@ -326,13 +326,13 @@ struct bitcoin_tx *bitcoin_tx(const tal_t *ctx, varint_t input_count,
 	return tx;
 }
 
-static bool pull_sha256_double(const u8 **cursor, size_t *max,
+static bool pull_sha256_double( u8 **cursor, size_t *max,
 			       struct sha256_double *h)
 {
 	return pull(cursor, max, h, sizeof(*h));
 }
 
-static u64 pull_value(const u8 **cursor, size_t *max)
+static u64 pull_value( u8 **cursor, size_t *max)
 {
 	u64 amount;
 
@@ -342,7 +342,7 @@ static u64 pull_value(const u8 **cursor, size_t *max)
 
 /* Pulls a varint which specifies n items of mult size: ensures basic
  * sanity to avoid trivial OOM */
-static u64 pull_length(const u8 **cursor, size_t *max, size_t mult)
+static u64 pull_length( u8 **cursor, size_t *max, size_t mult)
 {
 	u64 v = pull_varint(cursor, max);
 	if (v * mult > *max) {
@@ -353,7 +353,7 @@ static u64 pull_length(const u8 **cursor, size_t *max, size_t mult)
 	return v;
 }
 
-static void pull_input(const tal_t *ctx, const u8 **cursor, size_t *max,
+static void pull_input( tal_t *ctx,  u8 **cursor, size_t *max,
 		       struct bitcoin_tx_input *input)
 {
 	u64 script_len;
@@ -368,7 +368,7 @@ static void pull_input(const tal_t *ctx, const u8 **cursor, size_t *max,
 	input->sequence_number = pull_le32(cursor, max);
 }
 
-static void pull_output(const tal_t *ctx, const u8 **cursor, size_t *max,
+static void pull_output( tal_t *ctx,  u8 **cursor, size_t *max,
 			struct bitcoin_tx_output *output)
 {
 	output->amount = pull_value(cursor, max);
@@ -376,7 +376,7 @@ static void pull_output(const tal_t *ctx, const u8 **cursor, size_t *max,
 	pull(cursor, max, output->script, tal_len(output->script));
 }
 
-static u8 *pull_witness_item(const tal_t *ctx, const u8 **cursor, size_t *max)
+static u8 *pull_witness_item( tal_t *ctx,  u8 **cursor, size_t *max)
 {
 	uint64_t len = pull_length(cursor, max, 1);
 	u8 *item;
@@ -387,7 +387,7 @@ static u8 *pull_witness_item(const tal_t *ctx, const u8 **cursor, size_t *max)
 }
 
 static void pull_witness(struct bitcoin_tx_input *inputs, size_t i,
-			 const u8 **cursor, size_t *max)
+			  u8 **cursor, size_t *max)
 {
 	uint64_t j, num = pull_length(cursor, max, 1);
 
@@ -404,7 +404,7 @@ static void pull_witness(struct bitcoin_tx_input *inputs, size_t i,
 	}
 }
 
-struct bitcoin_tx *pull_bitcoin_tx(const tal_t *ctx, const u8 **cursor,
+struct bitcoin_tx *pull_bitcoin_tx( tal_t *ctx,  u8 **cursor,
 				   size_t *max)
 {
 	size_t i;
@@ -446,12 +446,12 @@ struct bitcoin_tx *pull_bitcoin_tx(const tal_t *ctx, const u8 **cursor,
 	return tx;
 }
 
-struct bitcoin_tx *bitcoin_tx_from_hex(const tal_t *ctx, const char *hex,
+struct bitcoin_tx *bitcoin_tx_from_hex( tal_t *ctx,  char *hex,
 				       size_t hexlen)
 {
-	const char *end;
+	 char *end;
 	u8 *linear_tx;
-	const u8 *p;
+	 u8 *p;
 	struct bitcoin_tx *tx;
 	size_t len;
 
@@ -493,7 +493,7 @@ static void reverse_bytes(u8 *arr, size_t len)
 	}
 }
 
-bool bitcoin_txid_from_hex(const char *hexstr, size_t hexstr_len,
+bool bitcoin_txid_from_hex( char *hexstr, size_t hexstr_len,
 			   struct bitcoin_txid *txid)
 {
 	if (!hex_decode(hexstr, hexstr_len, txid, sizeof(*txid)))
@@ -502,7 +502,7 @@ bool bitcoin_txid_from_hex(const char *hexstr, size_t hexstr_len,
 	return true;
 }
 
-bool bitcoin_txid_to_hex(const struct bitcoin_txid *txid,
+bool bitcoin_txid_to_hex( struct bitcoin_txid *txid,
 			 char *hexstr, size_t hexstr_len)
 {
 	struct sha256_double rev = txid->shad;
@@ -510,7 +510,7 @@ bool bitcoin_txid_to_hex(const struct bitcoin_txid *txid,
 	return hex_encode(&rev, sizeof(rev), hexstr, hexstr_len);
 }
 
-static char *fmt_bitcoin_tx(const tal_t *ctx, const struct bitcoin_tx *tx)
+static char *fmt_bitcoin_tx( tal_t *ctx,  struct bitcoin_tx *tx)
 {
 	u8 *lin = linearize_tx(ctx, tx);
 	char *s = tal_hex(ctx, lin);
@@ -518,7 +518,7 @@ static char *fmt_bitcoin_tx(const tal_t *ctx, const struct bitcoin_tx *tx)
 	return s;
 }
 
-static char *fmt_bitcoin_txid(const tal_t *ctx, const struct bitcoin_txid *txid)
+static char *fmt_bitcoin_txid( tal_t *ctx,  struct bitcoin_txid *txid)
 {
 	char *hexstr = tal_arr(ctx, char, hex_str_size(sizeof(*txid)));
 
