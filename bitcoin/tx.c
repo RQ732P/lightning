@@ -206,7 +206,7 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	push_le32(tx->input[input_num].index, push_sha, ctx);
 
 
-	const unsigned char *sw = witness_script;
+	sw = witness_script;
 		printf("tx hash_for_segwit witness_script\n");
 		while(*sw)
 			printf("%02x", (unsigned int) *sw++);
@@ -253,7 +253,7 @@ void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
 	}
 
 	printf("tx digest (tx.c)\n");
-	unsigned char * sw = (unsigned char *) ctx;
+	unsigned char * sw = (unsigned char *) &ctx;
 	for (int i = 0; i < 100; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
