@@ -188,7 +188,7 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 
 	unsigned char * sw;
 	printf("hash for segwit - tx.c\n");
-	sw = (unsigned char *) &ctx;
+	sw = (unsigned char *) ctx;
 	for (int i = 0; i < 100; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
@@ -198,7 +198,7 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	push_sha(&h, sizeof(h), ctx);
 
 	printf("hash for segwit - tx.c\n");
-	sw = (unsigned char *) &ctx;
+	sw = (unsigned char *) ctx;
 	for (int i = 0; i < 100; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
@@ -214,7 +214,7 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	push_le32(tx->input[input_num].index, push_sha, ctx);
 
 	printf("hash for segwit - tx.c\n");
-	sw = (unsigned char *) &ctx;
+	sw = (unsigned char *) ctx;
 	for (int i = 0; i < 100; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
@@ -236,7 +236,7 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	push_le32(tx->lock_time, push_sha, ctx);
 
 	printf("hash for segwit - tx.c\n");
-	sw = (unsigned char *) &ctx;
+	sw = (unsigned char *) ctx;
 	for (int i = 0; i < 100; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
@@ -266,7 +266,7 @@ void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
 	}
 
 	printf("tx digest (tx.c)\n");
-	unsigned char * sw = (unsigned char *) &ctx;
+	unsigned char * sw = (unsigned char *) ctx;
 	for (int i = 0; i < 100; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
