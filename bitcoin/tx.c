@@ -237,16 +237,18 @@ void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
 			assert(!tx->input[i].script);
 
 	if (witness_script) {
+		printf("hash for segwit (tx.c)\n");
 		/* BIP143 hashing if OP_CHECKSIG is inside witness. */
 		hash_for_segwit(&ctx, tx, input_num, witness_script);
 	} else {
+		printf("hash for NON segwit (tx.c)\n");
 		/* Otherwise signature hashing never includes witness. */
 		push_tx(tx, push_sha, &ctx, false);
 	}
 
 	printf("tx digest (tx.c)\n");
 	unsigned char * sw = (unsigned char *) &ctx;
-	while(*sw)
+	for (int i = 0; i < 100; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
 
