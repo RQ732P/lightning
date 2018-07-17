@@ -206,11 +206,11 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	push_le32(tx->input[input_num].index, push_sha, ctx);
 
 
-	sw = witness_script;
-		printf("tx hash_for_segwit witness_script\n");
-		while(*sw)
-			printf("%02x", (unsigned int) *sw++);
-		printf("\n");
+	unsigned char * zz = witness_script;
+	printf("tx hash_for_segwit witness_script\n");
+	for (int i = 0; i < 100; ++i)
+		printf("%02x", (unsigned int) *zz++);
+	printf("\n");
 
 	/*     5. scriptCode of the input (varInt for the length + script) */
 	push_varint_blob(witness_script, push_sha, ctx);
