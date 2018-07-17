@@ -8,6 +8,7 @@
 #include <ccan/cast/cast.h>
 #include <common/type_to_string.h>
 #include <common/utils.h>
+#include <stdio.h>
 
 #undef DEBUG
 #ifdef DEBUG
@@ -151,7 +152,7 @@ bool check_tx_sig(struct bitcoin_tx *tx, size_t input_num,
 	sha256_tx_one_input(tx, input_num, redeemscript, witness_script, &hash);
 
 	printf("tx hash for sig check (siganture.c)\n");
-	unisgned char * sw = (unisgned char *) &hash;
+	unsigned char * sw = (unsigned char *) &hash;
 	while(*sw)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
