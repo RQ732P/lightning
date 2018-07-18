@@ -33,7 +33,7 @@ static void dump_tx(const char *msg,
 {
 	if (h) {
 		printf("\nHash: ");
-		for (i = 0; i < sizeof(h->sha.u.u8); i++)
+		for (int i = 0; i < sizeof(h->sha.u.u8); i++)
 			printf("%02x", h->sha.u.u8[i]);
 		printf("\n");
 	}
