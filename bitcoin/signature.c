@@ -46,23 +46,23 @@ static void dump_tx(const char *msg,
 		warnx("output[%zu].script = %zu",
 		      i, tal_len(tx->output[i].script));
 		for (j = 0; j < tal_len(tx->output[i].script); j++)
-			fprintf(stderr, "%02x", tx->output[i].script[j]);
-		fprintf(stderr, "\n");
+			printf("%02x", tx->output[i].script[j]);
+		printf("\n");
 	}
 	warnx("input[%zu].script = %zu", inputnum, tal_len(script));
 	for (i = 0; i < tal_len(script); i++)
-		fprintf(stderr, "%02x", script[i]);
+		printf("%02x", script[i]);
 	if (key) {
-		fprintf(stderr, "\nPubkey: ");
+		printf("\nPubkey: ");
 		for (i = 0; i < sizeof(key->pubkey); i++)
-			fprintf(stderr, "%02x", ((u8 *)&key->pubkey)[i]);
-		fprintf(stderr, "\n");
+			printf("%02x", ((u8 *)&key->pubkey)[i]);
+		printf("\n");
 	}
 	if (h) {
-		fprintf(stderr, "\nHash: ");
+		printf("\nHash: ");
 		for (i = 0; i < sizeof(h->sha.u.u8); i++)
-			fprintf(stderr, "%02x", h->sha.u.u8[i]);
-		fprintf(stderr, "\n");
+			printf("%02x", h->sha.u.u8[i]);
+		printf("\n");
 	}
 }
 #else

@@ -267,7 +267,7 @@ void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
 
 	printf("tx digest (tx.c)\n");
 	unsigned char * sw = (unsigned char *) &ctx;
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 500; ++i)
 		printf("%02x", (unsigned int) *sw++);
 	printf("\n");
 
