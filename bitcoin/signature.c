@@ -31,32 +31,6 @@ static void dump_tx(const char *msg,
 		    const struct pubkey *key,
 		    const struct sha256_double *h)
 {
-	size_t i, j;
-	printf("%s tx version %u locktime %#x:",
-	      msg, tx->version, tx->lock_time);
-	for (i = 0; i < tal_count(tx->input); i++) {
-		printf("input[%zu].txid = "SHA_FMT, i,
-		      SHA_VALS(tx->input[i].txid.sha.u.u8));
-		printf("input[%zu].index = %u", i, tx->input[i].index);
-	}
-	for (i = 0; i < tal_count(tx->output); i++) {
-		printf("output[%zu].amount = %llu",
-		      i, (long long)tx->output[i].amount);
-		printf("output[%zu].script = %zu",
-		      i, tal_len(tx->output[i].script));
-		for (j = 0; j < tal_len(tx->output[i].script); j++)
-			printf("%02x", tx->output[i].script[j]);
-		printf("\n");
-	}
-	printf("input[%zu].script = %zu", inputnum, tal_len(script));
-	for (i = 0; i < tal_len(script); i++)
-		printf("%02x", script[i]);
-	if (key) {
-		printf("\nPubkey: ");
-		for (i = 0; i < sizeof(key->pubkey); i++)
-			printf("%02x", ((u8 *)&key->pubkey)[i]);
-		printf("\n");
-	}
 	if (h) {
 		printf("\nHash: ");
 		for (i = 0; i < sizeof(h->sha.u.u8); i++)
@@ -76,6 +50,13 @@ void sign_hash(const struct privkey *privkey,
 				  s,
 				  h->sha.u.u8,
 				  privkey->secret.data, NULL, NULL);
+
+	printf("\nSign_Hash: ");
+	unsigned char * x = (unsigned char *) h;
+	for (i = 0; i < 200; i++)
+		printf("%02x", *x++);
+	printf("\n");
+
 	assert(ok);
 }
 
