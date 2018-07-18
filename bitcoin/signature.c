@@ -53,7 +53,7 @@ void sign_hash(const struct privkey *privkey,
 
 	printf("\nSign_Hash: ");
 	unsigned char * x = (unsigned char *) h;
-	for (i = 0; i < 200; i++)
+	for (int i = 0; i < 200; i++)
 		printf("%02x", *x++);
 	printf("\n");
 
