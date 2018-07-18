@@ -186,59 +186,60 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	 */ 
 	push_le32(tx->version, push_sha, ctx);
 
-	unsigned char * sw;
-	printf("hash for segwit - tx.c\n");
-	sw = (unsigned char *) ctx;
-	for (int i = 0; i < 100; ++i)
-		printf("%02x", (unsigned int) *sw++);
-	printf("\n");
+	showx("version", &tx->version);
 
 	/*     2. hashPrevouts (32-byte hash) */
 	hash_prevouts(&h, tx);
 	push_sha(&h, sizeof(h), ctx);
 
-	printf("hash for segwit - tx.c\n");
-	sw = (unsigned char *) ctx;
-	for (int i = 0; i < 100; ++i)
-		printf("%02x", (unsigned int) *sw++);
-	printf("\n");
-
+	showx("hash prevouts", &h);
 
 	/*     3. hashSequence (32-byte hash) */
 	hash_sequence(&h, tx);
 	push_sha(&h, sizeof(h), ctx);
 
+	showx("hash sequence", &h);
+
 	/*     4. outpoint (32-byte hash + 4-byte little endian)  */
-	push_sha(&tx->input[input_num].txid, sizeof(tx->input[input_num].txid),
-		ctx);
+	push_sha(&tx->input[input_num].txid, sizeof(tx->input[input_num].txid), ctx);
 	push_le32(tx->input[input_num].index, push_sha, ctx);
 
-	printf("hash for segwit - tx.c\n");
-	sw = (unsigned char *) ctx;
-	for (int i = 0; i < 100; ++i)
-		printf("%02x", (unsigned int) *sw++);
-	printf("\n");
+	showx("outpoint txid", &tx->input[input_num].txid);
+	showx("outpoint index", &tx->input[input_num].index);
 
 	/*     5. scriptCode of the input (varInt for the length + script) */
 	push_varint_blob(witness_script, push_sha, ctx);
 
+	showx("script", witness_script);
+
 	/*     6. value of the output spent by this input (8-byte little end) */
 	push_le64(*tx->input[input_num].amount, push_sha, ctx);
 
+	showx("output amount", &tx->input[input_num].amount);
+
 	/*     7. nSequence of the input (4-byte little endian) */
 	push_le32(tx->input[input_num].sequence_number, push_sha, ctx);
+
+	showx("nsequence", &tx->input[input_num].sequence_number);
 
 	/*     8. hashOutputs (32-byte hash) */
 	hash_outputs(&h, tx);
 	push_sha(&h, sizeof(h), ctx);
 
+	showx("hash outputs", &h);
+
 	/*     9. nLocktime of the transaction (4-byte little endian) */
 	push_le32(tx->lock_time, push_sha, ctx);
 
-	printf("hash for segwit - tx.c\n");
-	sw = (unsigned char *) ctx;
+	showx("locktime", &tx->lock_time);
+}
+
+void showx(char * msg, unsigned char * s)
+{
+	printf(msg);
+	printf("\n");
 	for (int i = 0; i < 100; ++i)
-		printf("%02x", (unsigned int) *sw++);
+		printf("%02x", (unsigned int) *s++);
 	printf("\n");
 }
 
