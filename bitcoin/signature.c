@@ -10,8 +10,7 @@
 #include <common/utils.h>
 #include <stdio.h>
 
-#undef DEBUG
-#ifdef DEBUG
+
 # include <ccan/err/err.h>
 # include <stdio.h>
 #define SHA_FMT					   \
@@ -33,23 +32,23 @@ static void dump_tx(const char *msg,
 		    const struct sha256_double *h)
 {
 	size_t i, j;
-	warnx("%s tx version %u locktime %#x:",
+	printf("%s tx version %u locktime %#x:",
 	      msg, tx->version, tx->lock_time);
 	for (i = 0; i < tal_count(tx->input); i++) {
-		warnx("input[%zu].txid = "SHA_FMT, i,
+		printf("input[%zu].txid = "SHA_FMT, i,
 		      SHA_VALS(tx->input[i].txid.sha.u.u8));
-		warnx("input[%zu].index = %u", i, tx->input[i].index);
+		printf("input[%zu].index = %u", i, tx->input[i].index);
 	}
 	for (i = 0; i < tal_count(tx->output); i++) {
-		warnx("output[%zu].amount = %llu",
+		printf("output[%zu].amount = %llu",
 		      i, (long long)tx->output[i].amount);
-		warnx("output[%zu].script = %zu",
+		printf("output[%zu].script = %zu",
 		      i, tal_len(tx->output[i].script));
 		for (j = 0; j < tal_len(tx->output[i].script); j++)
 			printf("%02x", tx->output[i].script[j]);
 		printf("\n");
 	}
-	warnx("input[%zu].script = %zu", inputnum, tal_len(script));
+	printf("input[%zu].script = %zu", inputnum, tal_len(script));
 	for (i = 0; i < tal_len(script); i++)
 		printf("%02x", script[i]);
 	if (key) {
@@ -65,15 +64,7 @@ static void dump_tx(const char *msg,
 		printf("\n");
 	}
 }
-#else
-static void dump_tx(const char *msg UNUSED,
-		    const struct bitcoin_tx *tx UNUSED, size_t inputnum UNUSED,
-		    const u8 *script UNUSED,
-		    const struct pubkey *key UNUSED,
-		    const struct sha256_double *h UNUSED)
-{
-}
-#endif
+
 
 void sign_hash(const struct privkey *privkey,
 	       const struct sha256_double *h,
