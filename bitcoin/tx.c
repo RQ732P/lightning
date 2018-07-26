@@ -161,7 +161,7 @@ static void hash_sequence(struct sha256_double *h, const struct bitcoin_tx *tx)
 	sha256_init(&ctx);
 	for (i = 0; i < tal_count(tx->input); i++)
 	{
-		printf("sequence number %lx\n", tx->input[i].sequence_number);
+		printf("sequence number %x\n", tx->input[i].sequence_number);
 		push_le32(tx->input[i].sequence_number, push_sha, &ctx);
 	}
 
