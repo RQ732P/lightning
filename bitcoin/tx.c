@@ -13,6 +13,17 @@
 
 #define SEGREGATED_WITNESS_FLAG 0x1
 
+
+static void showx(char * msg, unsigned char * s)
+{
+	printf("%s  ", msg);
+	printf("\n");
+	for (int i = 0; i < 100; ++i)
+		printf("%02x", (unsigned int) *s++);
+	printf("\n");
+}
+
+
 static void push_tx_input(const struct bitcoin_tx_input *input,
 			 void (*push)(const void *, size_t, void *), void *pushp)
 {
@@ -147,7 +158,10 @@ static void hash_sequence(struct sha256_double *h, const struct bitcoin_tx *tx)
 	 * of nSequence of all inputs */
 	sha256_init(&ctx);
 	for (i = 0; i < tal_count(tx->input); i++)
+	{
+		printf("sequence number %d", tx->input[i].sequence_number);
 		push_le32(tx->input[i].sequence_number, push_sha, &ctx);
+	}
 
 	sha256_double_done(&ctx, h);
 }
@@ -170,15 +184,6 @@ static void hash_outputs(struct sha256_double *h, const struct bitcoin_tx *tx)
 	sha256_double_done(&ctx, h);
 }
 
-
-static void showx(char * msg, unsigned char * s)
-{
-	printf("%s  ", msg);
-	printf("\n");
-	for (int i = 0; i < 100; ++i)
-		printf("%02x", (unsigned int) *s++);
-	printf("\n");
-}
 
 
 static void hash_for_segwit(struct sha256_ctx *ctx,
@@ -225,11 +230,10 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	/*     6. value of the output spent by this input (8-byte little end) */
 	push_le64(*tx->input[input_num].amount, push_sha, ctx);
 
-	showx("output amount", (unsigned char *) &tx->input[input_num].amount);
+	printf("output amount %f", tx->input[input_num].amount);
 
 	/*     7. nSequence of the input (4-byte little endian) */
 	push_le32(tx->input[input_num].sequence_number, push_sha, ctx);
-
 	showx("nsequence", (unsigned char *) &tx->input[input_num].sequence_number);
 
 	/*     8. hashOutputs (32-byte hash) */
