@@ -170,6 +170,17 @@ static void hash_outputs(struct sha256_double *h, const struct bitcoin_tx *tx)
 	sha256_double_done(&ctx, h);
 }
 
+
+void showx(char * msg, unsigned char * s)
+{
+	printf(msg);
+	printf("\n");
+	for (int i = 0; i < 100; ++i)
+		printf("%02x", (unsigned int) *s++);
+	printf("\n");
+}
+
+
 static void hash_for_segwit(struct sha256_ctx *ctx,
 			    const struct bitcoin_tx *tx,
 			    unsigned int input_num,
@@ -232,15 +243,6 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	push_le32(tx->lock_time, push_sha, ctx);
 
 	showx("locktime", &tx->lock_time);
-}
-
-void showx(char * msg, unsigned char * s)
-{
-	printf(msg);
-	printf("\n");
-	for (int i = 0; i < 100; ++i)
-		printf("%02x", (unsigned int) *s++);
-	printf("\n");
 }
 
 void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
