@@ -141,7 +141,9 @@ static void hash_prevouts(struct sha256_double *h, const struct bitcoin_tx *tx)
 	 * double SHA256 of the serialization of all input
 	 * outpoints */
 	sha256_init(&ctx);
-	for (i = 0; i < tal_count(tx->input); i++) {
+	for (i = 0; i < tal_count(tx->input); i++) 
+	{
+		showx("prevout", (unsigned char *) &tx->input[i].txid);
 		push_sha(&tx->input[i].txid, sizeof(tx->input[i].txid), &ctx);
 		push_le32(tx->input[i].index, push_sha, &ctx);
 	}
@@ -159,7 +161,7 @@ static void hash_sequence(struct sha256_double *h, const struct bitcoin_tx *tx)
 	sha256_init(&ctx);
 	for (i = 0; i < tal_count(tx->input); i++)
 	{
-		printf("sequence number %d", tx->input[i].sequence_number);
+		printf("sequence number %lx\n", tx->input[i].sequence_number);
 		push_le32(tx->input[i].sequence_number, push_sha, &ctx);
 	}
 
