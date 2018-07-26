@@ -197,52 +197,52 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	 */ 
 	push_le32(tx->version, push_sha, ctx);
 
-	showx("version", &tx->version);
+	showx("version", (char *) &tx->version);
 
 	/*     2. hashPrevouts (32-byte hash) */
 	hash_prevouts(&h, tx);
 	push_sha(&h, sizeof(h), ctx);
 
-	showx("hash prevouts", &h);
+	showx("hash prevouts", (char *) &h);
 
 	/*     3. hashSequence (32-byte hash) */
 	hash_sequence(&h, tx);
 	push_sha(&h, sizeof(h), ctx);
 
-	showx("hash sequence", &h);
+	showx("hash sequence", (char *) &h);
 
 	/*     4. outpoint (32-byte hash + 4-byte little endian)  */
 	push_sha(&tx->input[input_num].txid, sizeof(tx->input[input_num].txid), ctx);
 	push_le32(tx->input[input_num].index, push_sha, ctx);
 
-	showx("outpoint txid", &tx->input[input_num].txid);
-	showx("outpoint index", &tx->input[input_num].index);
+	showx("outpoint txid", (char *) &tx->input[input_num].txid);
+	showx("outpoint index", (char *) &tx->input[input_num].index);
 
 	/*     5. scriptCode of the input (varInt for the length + script) */
 	push_varint_blob(witness_script, push_sha, ctx);
 
-	showx("script", witness_script);
+	showx("script", (char *) witness_script);
 
 	/*     6. value of the output spent by this input (8-byte little end) */
 	push_le64(*tx->input[input_num].amount, push_sha, ctx);
 
-	showx("output amount", &tx->input[input_num].amount);
+	showx("output amount", (char *) &tx->input[input_num].amount);
 
 	/*     7. nSequence of the input (4-byte little endian) */
 	push_le32(tx->input[input_num].sequence_number, push_sha, ctx);
 
-	showx("nsequence", &tx->input[input_num].sequence_number);
+	showx("nsequence", (char *) &tx->input[input_num].sequence_number);
 
 	/*     8. hashOutputs (32-byte hash) */
 	hash_outputs(&h, tx);
 	push_sha(&h, sizeof(h), ctx);
 
-	showx("hash outputs", &h);
+	showx("hash outputs", (char *) &h);
 
 	/*     9. nLocktime of the transaction (4-byte little endian) */
 	push_le32(tx->lock_time, push_sha, ctx);
 
-	showx("locktime", &tx->lock_time);
+	showx("locktime", (char *) &tx->lock_time);
 }
 
 void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
