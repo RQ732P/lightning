@@ -230,7 +230,7 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	/*     6. value of the output spent by this input (8-byte little end) */
 	push_le64(*tx->input[input_num].amount, push_sha, ctx);
 
-	printf("output amount %lu", tx->input[input_num].amount);
+	printf("output amount %lu", &tx->input[input_num].amount);
 
 	/*     7. nSequence of the input (4-byte little endian) */
 	push_le32(tx->input[input_num].sequence_number, push_sha, ctx);
