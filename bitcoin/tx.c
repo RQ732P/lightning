@@ -171,7 +171,7 @@ static void hash_outputs(struct sha256_double *h, const struct bitcoin_tx *tx)
 }
 
 
-static void showx(char * msg, unsigned char * s)
+static void showx(char * msg, char * s)
 {
 	printf("%s  ", msg);
 	printf("\n");
