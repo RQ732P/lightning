@@ -171,7 +171,7 @@ static void hash_outputs(struct sha256_double *h, const struct bitcoin_tx *tx)
 }
 
 
-static void showx(char * msg, char * s)
+static void showx(char * msg, unsigned char * s)
 {
 	printf("%s  ", msg);
 	printf("\n");
@@ -196,53 +196,52 @@ static void hash_for_segwit(struct sha256_ctx *ctx,
 	 *     1. nVersion of the transaction (4-byte little endian)
 	 */ 
 	push_le32(tx->version, push_sha, ctx);
-
-	showx("version", (char *) &tx->version);
+	showx("version", (unsigned char *) &tx->version);
 
 	/*     2. hashPrevouts (32-byte hash) */
 	hash_prevouts(&h, tx);
-	push_sha(&h, sizeof(h), ctx);
+	showx("hash prevouts", (unsigned char *) &h);
 
-	showx("hash prevouts", (char *) &h);
+	push_sha(&h, sizeof(h), ctx);
 
 	/*     3. hashSequence (32-byte hash) */
 	hash_sequence(&h, tx);
-	push_sha(&h, sizeof(h), ctx);
+	showx("hash sequence", (unsigned char *) &h);
 
-	showx("hash sequence", (char *) &h);
+	push_sha(&h, sizeof(h), ctx);
 
 	/*     4. outpoint (32-byte hash + 4-byte little endian)  */
 	push_sha(&tx->input[input_num].txid, sizeof(tx->input[input_num].txid), ctx);
 	push_le32(tx->input[input_num].index, push_sha, ctx);
 
-	showx("outpoint txid", (char *) &tx->input[input_num].txid);
-	showx("outpoint index", (char *) &tx->input[input_num].index);
+	showx("outpoint txid", (unsigned char *) &tx->input[input_num].txid);
+	showx("outpoint index", (unsigned char *) &tx->input[input_num].index);
 
 	/*     5. scriptCode of the input (varInt for the length + script) */
 	push_varint_blob(witness_script, push_sha, ctx);
 
-	showx("script", (char *) witness_script);
+	showx("script", (unsigned char *) witness_script);
 
 	/*     6. value of the output spent by this input (8-byte little end) */
 	push_le64(*tx->input[input_num].amount, push_sha, ctx);
 
-	showx("output amount", (char *) &tx->input[input_num].amount);
+	showx("output amount", (unsigned char *) &tx->input[input_num].amount);
 
 	/*     7. nSequence of the input (4-byte little endian) */
 	push_le32(tx->input[input_num].sequence_number, push_sha, ctx);
 
-	showx("nsequence", (char *) &tx->input[input_num].sequence_number);
+	showx("nsequence", (unsigned char *) &tx->input[input_num].sequence_number);
 
 	/*     8. hashOutputs (32-byte hash) */
 	hash_outputs(&h, tx);
 	push_sha(&h, sizeof(h), ctx);
 
-	showx("hash outputs", (char *) &h);
+	showx("hash outputs", (unsigned char *) &h);
 
 	/*     9. nLocktime of the transaction (4-byte little endian) */
 	push_le32(tx->lock_time, push_sha, ctx);
 
-	showx("locktime", (char *) &tx->lock_time);
+	showx("locktime", (unsigned char *) &tx->lock_time);
 }
 
 void sha256_tx_for_sig(struct sha256_double *h, const struct bitcoin_tx *tx,
