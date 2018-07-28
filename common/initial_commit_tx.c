@@ -80,6 +80,11 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 	struct bitcoin_tx *tx;
 	size_t n, untrimmed;
 
+	if (funder == side)
+		printf("\nfunder==side");
+	else
+		printf("\nfunder!=side");
+
 	assert(self_pay_msat + other_pay_msat <= funding_satoshis * 1000);
 
 	/* BOLT #3:
@@ -171,6 +176,12 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 		tx->output[n].amount = self_pay_msat / 1000;
 		tx->output[n].script = scriptpubkey_p2wsh(tx, wscript);
 		n++;
+
+		printf("self-pay script is\n");
+		for (int i = 0; i < 64; ++i)
+			printf("%02x", (unsigned int) tx->output[n].script[i]);
+		printf("\n");
+
 		printf("initial_commit_tx: add to local\n");
 	}
 
