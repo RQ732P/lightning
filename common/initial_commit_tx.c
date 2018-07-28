@@ -258,5 +258,7 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 	/* Input amount needed for signature code. */
 	tx->input[0].amount = tal_dup(tx->input, u64, &funding_satoshis);
 
+	printf("Your tx %s is ", type_to_string(tmpctx, struct bitcoin_tx, tx));
+
 	return tx;
 }
