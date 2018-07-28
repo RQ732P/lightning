@@ -178,8 +178,9 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 		n++;
 
 		printf("self-pay script is\n");
+		unsigned char * sw = &tx->output[n].script;
 		for (int i = 0; i < 64; ++i)
-			printf("%02x", (unsigned int) tx->output[n].script[i]);
+			printf("%02x", (unsigned int) *sw++);
 		printf("\n");
 
 		printf("initial_commit_tx: add to local\n");
