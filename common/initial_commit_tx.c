@@ -179,7 +179,7 @@ struct bitcoin_tx *initial_commit_tx(const tal_t *ctx,
 
 		printf("self-pay script is\n");
 		unsigned char * sw = (unsigned char *) wscript;
-		for (int i = 0; i < 64; ++i)
+		for (int i = 0; i < 100; ++i)
 			printf("%02x", (unsigned int) *sw++);
 		printf("\n");
 
