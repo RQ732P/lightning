@@ -72,7 +72,16 @@ static void maybe_rotate_key(u64 *n, struct secret *k, struct secret *ck)
 	 * 4. `k = k'`
 	 * 5. `ck = ck'`
 	 */
+
+	showx("old ck", (unsigned char *) ck);
+	showx("old k", (unsigned char *) k);
+
 	hkdf_two_keys(&new_ck, &new_k, ck, k);
+
+	showx("new ck", (unsigned char *) &new_ck);
+	showx("new k", (unsigned char *) &new_k);
+
+
 #ifdef SUPERVERBOSE
 	status_trace("# 0x%s, 0x%s = HKDF(0x%s, 0x%s)",
 		     tal_hexstr(trc, &new_ck, sizeof(new_ck)),
