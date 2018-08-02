@@ -123,7 +123,7 @@ u8 *cryptomsg_decrypt_body(const tal_t *ctx,
 	 *    * The nonce `rn` MUST be incremented after this step.
 	 */
 
-	showx("decrypt key: ", (unsigned char *) &cs->rk.data);
+	//showx("decrypt key: ", (unsigned char *) &cs->rk.data);
 
 	if (crypto_aead_chacha20poly1305_ietf_decrypt(decrypted,
 						      &mlen, NULL,
@@ -194,7 +194,7 @@ bool cryptomsg_decrypt_header(struct crypto_state *cs, u8 hdr[18], u16 *lenp)
 	 *    * The nonce `rn` MUST be incremented after this step.
 	 */
 
-	showx("decrypt key: ", (unsigned char *) &cs->rk.data);
+	//showx("decrypt key: ", (unsigned char *) &cs->rk.data);
 
 	if (crypto_aead_chacha20poly1305_ietf_decrypt((unsigned char *)&len,
 						      &mlen, NULL,
@@ -298,6 +298,9 @@ u8 *cryptomsg_encrypt_msg(const tal_t *ctx,
                 data).
 	 */
 	le64_nonce(npub, cs->sn++);
+
+	//showx("encrypt key: ", (unsigned char *) &cs->sk.data);
+
 	ret = crypto_aead_chacha20poly1305_ietf_encrypt(out, &clen,
 							(unsigned char *)
 							memcheck(&l, sizeof(l)),
@@ -307,13 +310,12 @@ u8 *cryptomsg_encrypt_msg(const tal_t *ctx,
 							cs->sk.data);
 	assert(ret == 0);
 	assert(clen == sizeof(l) + 16);
-#ifdef SUPERVERBOSE
+
 	status_trace("# encrypt l: cleartext=0x%s, AD=NULL, sn=0x%s, sk=0x%s => 0x%s",
 		     tal_hexstr(trc, &l, sizeof(l)),
 		     tal_hexstr(trc, npub, sizeof(npub)),
 		     tal_hexstr(trc, &cs->sk, sizeof(cs->sk)),
 		     tal_hexstr(trc, out, clen));
-#endif
 
 	/* BOLT #8:
 	 *
@@ -332,13 +334,12 @@ u8 *cryptomsg_encrypt_msg(const tal_t *ctx,
 							cs->sk.data);
 	assert(ret == 0);
 	assert(clen == mlen + 16);
-#ifdef SUPERVERBOSE
+
 	status_trace("# encrypt m: cleartext=0x%s, AD=NULL, sn=0x%s, sk=0x%s => 0x%s",
 		     tal_hexstr(trc, msg, mlen),
 		     tal_hexstr(trc, npub, sizeof(npub)),
 		     tal_hexstr(trc, &cs->sk, sizeof(cs->sk)),
 		     tal_hexstr(trc, out + 18, clen));
-#endif
 
 	maybe_rotate_key(&cs->sn, &cs->sk, &cs->s_ck);
 
