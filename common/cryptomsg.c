@@ -13,6 +13,17 @@
 #include <wire/peer_wire.h>
 #include <wire/wire.h>
 #include <wire/wire_io.h>
+#include <stdio.h>
+
+
+static void showx(char * msg, unsigned char * s)
+{
+	printf("%s  ", msg);
+	printf("\n");
+	for (int i = 0; i < 100; ++i)
+		printf("%02x", (unsigned int) *s++);
+	printf("\n");
+}
 
 static void hkdf_two_keys(struct secret *out1, struct secret *out2,
 			  const struct secret *in1,
@@ -111,6 +122,9 @@ u8 *cryptomsg_decrypt_body(const tal_t *ctx,
 	 *    obtain decrypted plaintext packet `p`.
 	 *    * The nonce `rn` MUST be incremented after this step.
 	 */
+
+	showx("decrypt key: ", (unsigned char *) cs->rk.data);
+
 	if (crypto_aead_chacha20poly1305_ietf_decrypt(decrypted,
 						      &mlen, NULL,
 						      memcheck(in, inlen),
@@ -179,6 +193,9 @@ bool cryptomsg_decrypt_header(struct crypto_state *cs, u8 hdr[18], u16 *lenp)
 	 *	(associated data).
 	 *    * The nonce `rn` MUST be incremented after this step.
 	 */
+
+	showx("decrypt key: ", (unsigned char *) cs->rk.data);
+	
 	if (crypto_aead_chacha20poly1305_ietf_decrypt((unsigned char *)&len,
 						      &mlen, NULL,
 						      memcheck(hdr, 18), 18,
