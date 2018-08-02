@@ -123,7 +123,7 @@ u8 *cryptomsg_decrypt_body(const tal_t *ctx,
 	 *    * The nonce `rn` MUST be incremented after this step.
 	 */
 
-	showx("decrypt key: ", (unsigned char *) cs->rk.data);
+	showx("decrypt key: ", (unsigned char *) &cs->rk.data);
 
 	if (crypto_aead_chacha20poly1305_ietf_decrypt(decrypted,
 						      &mlen, NULL,
@@ -194,8 +194,8 @@ bool cryptomsg_decrypt_header(struct crypto_state *cs, u8 hdr[18], u16 *lenp)
 	 *    * The nonce `rn` MUST be incremented after this step.
 	 */
 
-	showx("decrypt key: ", (unsigned char *) cs->rk.data);
-	
+	showx("decrypt key: ", (unsigned char *) &cs->rk.data);
+
 	if (crypto_aead_chacha20poly1305_ietf_decrypt((unsigned char *)&len,
 						      &mlen, NULL,
 						      memcheck(hdr, 18), 18,
