@@ -8,6 +8,7 @@
 #include <ccan/crypto/sha256/sha256.h>
 #include <ccan/endian/endian.h>
 #include <ccan/mem/mem.h>
+#include <stdio.h>
 
 /* Some standard ops */
 #define OP_0		0x00
