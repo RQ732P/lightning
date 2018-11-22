@@ -485,6 +485,16 @@ u8 *bitcoin_wscript_to_local(const tal_t *ctx, u16 to_self_delay,
 	return script;
 }
 
+static void showx(char * msg, unsigned char * s)
+{
+	printf("%s  ", msg);
+	printf("\n");
+	for (int i = 0; i < 100; ++i)
+		printf("%02x", (unsigned int) *s++);
+	printf("\n");
+}
+
+
 /* BOLT #3:
  *
  * #### Offered HTLC Outputs
@@ -546,6 +556,8 @@ u8 *bitcoin_wscript_htlc_offer_ripemd160(const tal_t *ctx,
 	add_op(&script, OP_CHECKSIG);
 	add_op(&script, OP_ENDIF);
 	add_op(&script, OP_ENDIF);
+
+	showx("script", (unsigned char *) script);
 
 	return script;
 }
