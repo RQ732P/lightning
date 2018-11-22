@@ -558,7 +558,7 @@ u8 *bitcoin_wscript_htlc_offer_ripemd160(const tal_t *ctx,
 	add_op(&script, OP_ENDIF);
 	add_op(&script, OP_ENDIF);
 
-	showx("script", (unsigned char *) script);
+	showx("offererscript", (unsigned char *) script);
 
 	return script;
 }
@@ -644,6 +644,8 @@ u8 *bitcoin_wscript_htlc_receive_ripemd(const tal_t *ctx,
 	add_op(&script, OP_CHECKSIG);
 	add_op(&script, OP_ENDIF);
 	add_op(&script, OP_ENDIF);
+
+	showx("receiverscript", (unsigned char *) script);
 
 	return script;
 }
