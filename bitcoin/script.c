@@ -490,7 +490,7 @@ static void showx(char * msg, unsigned char * s)
 {
 	printf("%s  ", msg);
 	printf("\n");
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 300; ++i)
 		printf("%02x", (unsigned int) *s++);
 	printf("\n");
 }
