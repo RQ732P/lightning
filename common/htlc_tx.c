@@ -3,6 +3,17 @@
 #include <bitcoin/tx.h>
 #include <common/htlc_tx.h>
 #include <common/keyset.h>
+#include <stdio.h>
+
+
+static void showx(char * msg, unsigned char * s)
+{
+	printf("%s  ", msg);
+	printf("\n");
+	for (int i = 0; i < 300; ++i)
+		printf("%02x", (unsigned int) *s++);
+	printf("\n");
+}
 
 static struct bitcoin_tx *htlc_tx(const tal_t *ctx,
 				  const struct bitcoin_txid *commit_txid,
@@ -66,6 +77,14 @@ static struct bitcoin_tx *htlc_tx(const tal_t *ctx,
 	tx->output[0].amount = amount - htlc_fee_satoshi;
 	wscript = bitcoin_wscript_htlc_tx(tx, to_self_delay,
 					  revocation_pubkey, local_delayedkey);
+
+
+
+	showx("htlcwscript", (unsigned char *) wscript);
+
+
+
+
 	tx->output[0].script = scriptpubkey_p2wsh(tx, wscript);
 	tal_free(wscript);
 
